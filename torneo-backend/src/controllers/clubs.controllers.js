@@ -5,7 +5,7 @@ export const createClub = async (req, res) => {
   try {
     const { name, coordinator_name, email, password, phone } = req.body;
 
-    // 🔐 Encriptar contraseña
+    // Encriptar la contraseña antes de guardarla
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
@@ -19,7 +19,7 @@ export const createClub = async (req, res) => {
   } catch (error) {
     console.error(error);
 
-    // ⚠️ Manejo de error por email duplicado
+    // Manejo de error específico para clave única (email)
     if (error.code === "23505") {
       return res.status(400).json({ message: "El email ya está registrado" });
     }
