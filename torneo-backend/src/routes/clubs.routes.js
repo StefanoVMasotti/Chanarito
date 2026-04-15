@@ -6,12 +6,13 @@ import {
   updateClub,
   deleteClub,
 } from "../controllers/clubs.controllers.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
 router.post("/", createClub);
 
-router.get("/", getClubs);
+router.get("/", verifyToken, getClubs);
 
 router.get("/:id", getClubById);
 
