@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { loginRequest } from "../api/auth";
+import { useNavigate } from "react-router-dom";
 
 function Login({ setToken }) {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({
@@ -25,8 +28,9 @@ function Login({ setToken }) {
         localStorage.setItem("token", res.token);
         localStorage.setItem("club", JSON.stringify(res.club));
 
-        // Actualizo el estado del token en el componente padre
-        setToken(res.token);
+        // Antes actualizaba el estado del token, pero ahora no es necesario porque el ProtectedRoute se basa en el localStorage
+        // setToken(res.token);
+        navigate("/dashboard");
 
         console.log("Login exitoso");
       } else {
@@ -38,19 +42,21 @@ function Login({ setToken }) {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="h-screen flex items-center justify-center bg-gray-100">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-6 rounded-2xl shadow-md w-80"
+        className="bg-white p-8 rounded-2xl shadow-lg w-80"
       >
-        <h2 className="text-xl font-bold mb-4 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-6 text-center">
+          Torneo Chañarito ⚽
+        </h2>
 
         <input
           type="email"
           name="email"
           placeholder="Email"
           onChange={handleChange}
-          className="w-full mb-3 p-2 border rounded"
+          className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
         <input
@@ -58,10 +64,10 @@ function Login({ setToken }) {
           name="password"
           placeholder="Password"
           onChange={handleChange}
-          className="w-full mb-3 p-2 border rounded"
+          className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-800">
+        <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-700 transition">
           Ingresar
         </button>
       </form>
