@@ -1,15 +1,25 @@
 import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import { useState } from "react";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
 
-  return token ? (
-    <Dashboard setToken={setToken} />
-  ) : (
-    <Login setToken={setToken} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
