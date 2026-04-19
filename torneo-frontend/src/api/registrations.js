@@ -26,3 +26,16 @@ export const getMyRegistrationsRequest = async () => {
 
   return res.json();
 };
+
+export const deleteRegistrationRequest = async (id) => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`http://localhost:3000/api/registrations/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.json();
+};

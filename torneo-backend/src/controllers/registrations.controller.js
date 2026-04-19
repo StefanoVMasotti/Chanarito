@@ -3,8 +3,6 @@ import { pool } from "../db/connection.js";
 export const createRegistration = async (req, res) => {
   try {
     const { category_id } = req.body;
-
-    //el club viene del token
     const club_id = req.user.id;
 
     const result = await pool.query(
@@ -17,6 +15,14 @@ export const createRegistration = async (req, res) => {
     res.json(result.rows[0]);
   } catch (error) {
     console.error(error);
+
+    //error de duplicado (clave única)
+    if (error.code === "23505") {
+      return res.status(400).json({
+        message: "Ya estás inscripto en esta categoría",
+      });
+    }
+
     res.status(500).json({ message: "Error al registrar" });
   }
 };
@@ -26,7 +32,7 @@ export const getMyRegistrations = async (req, res) => {
     const club_id = req.user.id;
 
     const result = await pool.query(
-      `SELECT r.id, c.year
+      `SELECT r.id, r.category_id, c.year
        FROM registrations r
        JOIN categories c ON r.category_id = c.id
        WHERE r.club_id = $1`,
@@ -37,5 +43,30 @@ export const getMyRegistrations = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener inscripciones" });
+  }
+};
+
+export const deleteRegistration = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const club_id = req.user.id;
+
+    const result = await pool.query(
+      `DELETE FROM registrations
+       WHERE id = $1 AND club_id = $2
+       RETURNING *`,
+      [id, club_id],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        message: "Registro no encontrado",
+      });
+    }
+
+    res.json({ message: "Inscripción eliminada" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al eliminar" });
   }
 };
