@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { createRegistrationRequest } from "../api/registrations";
 import { getCategoriesRequest } from "../api/categories";
 import { getMyRegistrationsRequest } from "../api/registrations";
+import { deleteRegistrationRequest } from "../api/registrations";
 
 function Dashboard({ setToken }) {
   const club = JSON.parse(localStorage.getItem("club"));
@@ -12,10 +13,24 @@ function Dashboard({ setToken }) {
   const [categories, setCategories] = useState([]);
   const [registrations, setRegistrations] = useState([]);
   const navigate = useNavigate();
+  const registeredIds = registrations.map((r) => r.category_id);
+  const [message, setMessage] = useState("");
 
   const fetchRegistrations = async () => {
     const data = await getMyRegistrationsRequest();
     setRegistrations(data);
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("¿Seguro que querés eliminar esta inscripción?")) return;
+    const res = await deleteRegistrationRequest(id);
+
+    setMessage(res.message);
+    setTimeout(() => {
+      setMessage("");
+    }, 3000);
+
+    fetchRegistrations(); //actualiza lista
   };
 
   const handleLogout = () => {
@@ -28,12 +43,22 @@ function Dashboard({ setToken }) {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    await createRegistrationRequest({
+    const res = await createRegistrationRequest({
       category_id: categoryId,
     });
 
+    if (res.message) {
+      setMessage(res.message);
+      return;
+    }
+
+    setMessage("Inscripción exitosa");
+    setTimeout(() => {
+      setMessage("");
+    }, 3000);
+
     fetchRegistrations();
-    setCategoryId(""); // 🔥 ahora sí funciona
+    setCategoryId("");
   };
 
   useEffect(() => {
@@ -81,26 +106,40 @@ function Dashboard({ setToken }) {
           ))}
         </ul>
       </div>
-      <form onSubmit={handleRegister} className="mt-6">
+      <form
+        onSubmit={handleRegister}
+        className="mt-6 flex flex-col items-center justify-center"
+      >
         <h3 className="font-semibold mb-2">Inscribirse a categoría</h3>
+        <div>
+          <select
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+            className="border p-2 mr-2 rounded"
+          >
+            <option value="">Seleccionar categoría</option>
 
-        <select
-          value={categoryId}
-          onChange={(e) => setCategoryId(e.target.value)}
-          className="border p-2 mr-2 rounded"
-        >
-          <option value="">Seleccionar categoría</option>
+            {categories.map((cat) => (
+              <option
+                key={cat.id}
+                value={cat.id}
+                disabled={registeredIds.includes(cat.id)}
+              >
+                {cat.year}{" "}
+                {registeredIds.includes(cat.id) ? "(Ya inscripto)" : ""}
+              </option>
+            ))}
+          </select>
 
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.year}
-            </option>
-          ))}
-        </select>
-
-        <button className="bg-green-500 text-white px-4 py-2 rounded">
-          Inscribirme
-        </button>
+          <button className="bg-green-500 text-white px-4 py-2 rounded">
+            Inscribirme
+          </button>
+        </div>
+        {message && (
+          <p className="mt-4 w-50 text-center text-blue-600 font-semibold border-2">
+            {message}
+          </p>
+        )}
       </form>
       <div className="mt-6">
         <h3 className="font-semibold mb-2">Mis inscripciones</h3>
@@ -110,8 +149,18 @@ function Dashboard({ setToken }) {
         ) : (
           <ul>
             {registrations.map((r) => (
-              <li key={r.id} className="border p-2 mb-2 rounded">
-                Categoría {r.year}
+              <li
+                key={r.id}
+                className="border p-3 mb-2 rounded-lg flex justify-between items-center"
+              >
+                <span>Categoría {r.year}</span>
+
+                <button
+                  onClick={() => handleDelete(r.id)}
+                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
+                >
+                  Eliminar
+                </button>
               </li>
             ))}
           </ul>
