@@ -6,6 +6,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { toast } from "react-toastify";
+import confirmDelete from "../utils/confirm.jsx";
 
 function Admin() {
   const [registrations, setRegistrations] = useState([]);
@@ -77,13 +79,12 @@ function Admin() {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("¿Eliminar esta inscripción?")) return;
+    confirmDelete(async () => {
+      const res = await deleteRegistrationAdminRequest(id);
+      toast.info(res.message);
 
-    const res = await deleteRegistrationAdminRequest(id);
-
-    alert(res.message);
-
-    fetchData();
+      fetchData();
+    });
   };
 
   useEffect(() => {
