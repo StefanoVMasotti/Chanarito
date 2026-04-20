@@ -39,3 +39,31 @@ export const deleteRegistrationRequest = async (id) => {
 
   return res.json();
 };
+
+export const getAllRegistrationsRequest = async () => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch("http://localhost:3000/api/registrations/all", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.json();
+};
+
+export const deleteRegistrationAdminRequest = async (id) => {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(
+    `http://localhost:3000/api/registrations/admin/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+  );
+
+  return res.json();
+};

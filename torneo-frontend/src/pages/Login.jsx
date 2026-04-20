@@ -67,7 +67,7 @@ function Login({ setToken }) {
           className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-700 transition">
+        <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-700 transition">
           Ingresar
         </button>
       </form>

@@ -85,16 +85,9 @@ function Dashboard({ setToken }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded-2xl shadow">
+    <div className="min-h-screen bg-blue-950 p-6">
+      <div className="max-w-3xl mx-auto bg-white/20 p-6 rounded-2xl shadow flex flex-col items-center">
         <h1 className="text-2xl font-bold mb-4">Bienvenido {club?.name} ⚽</h1>
-
-        <button
-          onClick={handleLogout}
-          className="mb-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-        >
-          Logout
-        </button>
 
         <h2 className="text-xl font-semibold mb-3">Clubes registrados:</h2>
 
@@ -105,17 +98,33 @@ function Dashboard({ setToken }) {
             </li>
           ))}
         </ul>
+        <div className="flex flex-row">
+          <button
+            onClick={handleLogout}
+            className="mb-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Logout
+          </button>
+          {club?.role === "admin" && (
+            <button
+              onClick={() => navigate("/admin")}
+              className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Ir a Admin
+            </button>
+          )}
+        </div>
       </div>
       <form
         onSubmit={handleRegister}
-        className="mt-6 flex flex-col items-center justify-center"
+        className="mt-6 max-w-3xl mx-auto text-white bg-white/20 p-6 rounded-2xl shadow flex flex-col items-center justify-center"
       >
         <h3 className="font-semibold mb-2">Inscribirse a categoría</h3>
         <div>
           <select
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
-            className="border p-2 mr-2 rounded"
+            className="border p-2 mr-2 rounded bg-white/20 text-black/50"
           >
             <option value="">Seleccionar categoría</option>
 
@@ -124,6 +133,7 @@ function Dashboard({ setToken }) {
                 key={cat.id}
                 value={cat.id}
                 disabled={registeredIds.includes(cat.id)}
+                className="bg-black/20 text-black"
               >
                 {cat.year}{" "}
                 {registeredIds.includes(cat.id) ? "(Ya inscripto)" : ""}
@@ -131,7 +141,7 @@ function Dashboard({ setToken }) {
             ))}
           </select>
 
-          <button className="bg-green-500 text-white px-4 py-2 rounded">
+          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
             Inscribirme
           </button>
         </div>
@@ -141,7 +151,7 @@ function Dashboard({ setToken }) {
           </p>
         )}
       </form>
-      <div className="mt-6">
+      <div className="mt-6 max-w-3xl mx-auto text-white bg-white/20 p-6 rounded-2xl shadow">
         <h3 className="font-semibold mb-2">Mis inscripciones</h3>
 
         {registrations.length === 0 ? (
