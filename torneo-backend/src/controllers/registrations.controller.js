@@ -70,3 +70,44 @@ export const deleteRegistration = async (req, res) => {
     res.status(500).json({ message: "Error al eliminar" });
   }
 };
+
+export const getAllRegistrations = async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT r.id, clubs.name AS club, c.year, r.created_at
+       FROM registrations r
+       JOIN clubs ON r.club_id = clubs.id
+       JOIN categories c ON r.category_id = c.id
+       ORDER BY r.created_at DESC`,
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al obtener registros" });
+  }
+};
+
+export const deleteAnyRegistration = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const result = await pool.query(
+      `DELETE FROM registrations
+       WHERE id = $1
+       RETURNING *`,
+      [id],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        message: "Registro no encontrado",
+      });
+    }
+
+    res.json({ message: "Inscripción eliminada por admin" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al eliminar" });
+  }
+};

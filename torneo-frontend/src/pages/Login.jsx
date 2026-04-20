@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { loginRequest } from "../api/auth";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Login({ setToken }) {
   const [form, setForm] = useState({
@@ -27,28 +28,34 @@ function Login({ setToken }) {
         // Guardo el Token y el club en el localStorage
         localStorage.setItem("token", res.token);
         localStorage.setItem("club", JSON.stringify(res.club));
-
-        // Antes actualizaba el estado del token, pero ahora no es necesario porque el ProtectedRoute se basa en el localStorage
-        // setToken(res.token);
-        navigate("/dashboard");
+        toast.dismiss();
+        toast.success("Login exitoso!");
+        setTimeout(() => {
+          // Antes actualizaba el estado del token, pero ahora no es necesario porque el ProtectedRoute se basa en el localStorage
+          // setToken(res.token);
+          navigate("/dashboard");
+        }, 3000);
 
         console.log("Login exitoso");
       } else {
+        toast.dismiss();
+        toast.info(res.message);
         console.log("Error:", res.message);
       }
     } catch (error) {
+      toast.error("Error en BD");
       console.error("Error en login", error);
     }
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
+    <div className="h-screen flex items-center justify-center bg-blue-950">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-2xl shadow-lg w-80"
+        className="bg-white/20 p-8 rounded-2xl shadow-lg w-80"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          Torneo Chañarito ⚽
+        <h2 className="text-2xl text-white font-bold mb-6 text-center">
+          Torneo Chañarito
         </h2>
 
         <input
@@ -56,7 +63,7 @@ function Login({ setToken }) {
           name="email"
           placeholder="Email"
           onChange={handleChange}
-          className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
         />
 
         <input
@@ -64,10 +71,10 @@ function Login({ setToken }) {
           name="password"
           placeholder="Password"
           onChange={handleChange}
-          className="w-full mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
         />
 
-        <button className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-700 transition">
+        <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-950 transition">
           Ingresar
         </button>
       </form>
