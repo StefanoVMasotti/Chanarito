@@ -3,16 +3,16 @@ import bcrypt from "bcrypt";
 
 export const createClub = async (req, res) => {
   try {
-    const { name, coordinator_name, email, password, phone } = req.body;
+    const { name, coordinator_name, email, password } = req.body;
 
     // Encriptar la contraseña antes de guardarla
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const result = await pool.query(
-      `INSERT INTO clubs (name, coordinator_name, email, password, phone)
+      `INSERT INTO clubs (name, coordinator_name, email, password)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING *`,
-      [name, coordinator_name, email, hashedPassword, phone],
+      [name, coordinator_name, email, hashedPassword],
     );
 
     res.status(201).json(result.rows[0]);
@@ -31,7 +31,7 @@ export const createClub = async (req, res) => {
 export const getClubs = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id, name, coordinator_name, email, phone, role, created_at FROM clubs",
+      "SELECT id, name, coordinator_name, email, role, created_at FROM clubs",
     );
 
     res.json(result.rows);
@@ -46,7 +46,7 @@ export const getClubById = async (req, res) => {
     const { id } = req.params;
 
     const result = await pool.query(
-      `SELECT id, name, coordinator_name, email, phone, role, created_at
+      `SELECT id, name, coordinator_name, email, role, created_at
        FROM clubs
        WHERE id = $1`,
       [id],
@@ -66,7 +66,7 @@ export const getClubById = async (req, res) => {
 export const updateClub = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, coordinator_name, email, phone } = req.body;
+    const { name, coordinator_name, email } = req.body;
 
     const result = await pool.query(
       `UPDATE clubs
@@ -75,7 +75,7 @@ export const updateClub = async (req, res) => {
            email = $3,
            phone = $4
        WHERE id = $5
-       RETURNING id, name, coordinator_name, email, phone, role, created_at`,
+       RETURNING id, name, coordinator_name, email, role, created_at`,
       [name, coordinator_name, email, phone, id],
     );
 

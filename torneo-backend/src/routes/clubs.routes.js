@@ -5,7 +5,7 @@ import {
   getClubById,
   updateClub,
   deleteClub,
-} from "../controllers/clubs.controllers.js";
+} from "../controllers/clubs.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();

@@ -62,6 +62,7 @@ function Dashboard({ setToken }) {
   useEffect(() => {
     const fetchClubs = async () => {
       const data = await getClubsRequest();
+      console.log("Type of clubs:", typeof clubs, "Value:", clubs);
       console.log("clubs:", data);
       setClubs(data);
     };
@@ -90,14 +91,15 @@ function Dashboard({ setToken }) {
         <h2 className="text-xl font-semibold mb-3">Clubes registrados:</h2>
 
         <ul>
-          {clubs.map((c) => (
-            <li
-              key={c.id}
-              className="border text-white p-3 mb-2 rounded-lg bg-white/10"
-            >
-              <strong>{c.name}</strong> - {c.email}
-            </li>
-          ))}
+          {Array.isArray(clubs) &&
+            clubs.map((c) => (
+              <li
+                key={c.id}
+                className="border text-white p-3 mb-2 rounded-lg bg-white/10"
+              >
+                <strong>{c.name}</strong> - {c.email}
+              </li>
+            ))}
         </ul>
         <div className="flex flex-row">
           <button

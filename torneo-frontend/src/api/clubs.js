@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api";
+const API_URL = "https://chanarito.onrender.com/api";
 
 export const getClubsRequest = async () => {
   const token = localStorage.getItem("token");
@@ -7,7 +7,7 @@ export const getClubsRequest = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // Bearer token para mayor seguridad
+      Authorization: `Bearer ${token}`,
     },
   });
 
