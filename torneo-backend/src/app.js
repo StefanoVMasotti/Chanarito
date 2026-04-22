@@ -9,7 +9,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://tu-frontend.vercel.app",
+    origin: "https://chanarito.vercel.app/",
     credentials: true,
   }),
 );
