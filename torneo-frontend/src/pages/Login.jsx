@@ -25,14 +25,14 @@ function Login({ setToken }) {
       const res = await loginRequest(form);
 
       if (res.token) {
-        // Guardo el Token y el club en el localStorage
+        //Guardo el Token y el club en el localStorage
         localStorage.setItem("token", res.token);
         localStorage.setItem("club", JSON.stringify(res.club));
         toast.dismiss();
         toast.success("Login exitoso!");
         setTimeout(() => {
-          // Antes actualizaba el estado del token, pero ahora no es necesario porque el ProtectedRoute se basa en el localStorage
-          // setToken(res.token);
+          //Antes actualizaba el estado del token, pero ahora no es necesario porque el ProtectedRoute se basa en el localStorage
+          //setToken(res.token);
           navigate("/dashboard");
         }, 3000);
 
