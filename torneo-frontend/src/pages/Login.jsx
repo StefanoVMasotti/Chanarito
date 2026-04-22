@@ -77,6 +77,15 @@ function Login({ setToken }) {
         <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-950 transition">
           Ingresar
         </button>
+        <p className="text-sm mt-3 text-white text-center">
+          ¿No tenés cuenta?{" "}
+          <span
+            onClick={() => navigate("/register")}
+            className="text-blue-400 font-bold underline cursor-pointer"
+          >
+            Registrate
+          </span>
+        </p>
       </form>
     </div>
   );
