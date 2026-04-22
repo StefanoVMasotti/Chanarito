@@ -1,6 +1,6 @@
 import "dotenv/config";
 import app from "./app.js";
-import { pool } from "./db/connection.js";
+import pool from "./db/connection.js";
 
 pool.query("SELECT NOW()", (err, res) => {
   if (err) {
