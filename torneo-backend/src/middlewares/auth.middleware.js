@@ -12,7 +12,7 @@ export const verifyToken = (req, res, next) => {
       return res.status(401).json({ message: "Formato inválido" });
     }
 
-    // Extraigo el token del header (después de "Bearer ")
+    //Extraigo el token del header (después de "Bearer ")
     const token = authHeader.split(" ")[1];
 
     if (!token) {

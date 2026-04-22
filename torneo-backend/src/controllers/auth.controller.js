@@ -25,7 +25,6 @@ export const loginClub = async (req, res) => {
       return res.status(400).json({ message: "Credenciales inválidas" });
     }
 
-    // Genero el JWT
     const token = jwt.sign(
       {
         id: club.id,
@@ -36,7 +35,7 @@ export const loginClub = async (req, res) => {
       { expiresIn: "2h" },
     );
 
-    //  Envio el token y los datos del club (sin la contraseña)
+    //Envio el token y los datos del club (sin la contraseña)
     res.json({
       token,
       club: {
@@ -49,5 +48,48 @@ export const loginClub = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error en login" });
+  }
+};
+
+export const register = async (req, res) => {
+  try {
+    const { name, coordinator_name, email, password } = req.body;
+
+    if (!name || !coordinator_name || !email || !password) {
+      return res.status(400).json({
+        message: "Todos los campos son obligatorios",
+      });
+    }
+
+    //encripto password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    //guardar
+    const result = await pool.query(
+      `INSERT INTO clubs (name, coordinator_name, email, password, role)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING id, name, coordinator_name, email, role`,
+      [name, coordinator_name, email, hashedPassword, "club"],
+    );
+
+    res.json({
+      message: "Club registrado correctamente",
+      club: result.rows[0],
+    });
+  } catch (error) {
+    console.error(error);
+
+    //email duplicado
+    if (error.code === "23505") {
+      return res.status(400).json({
+        message: "El email ya está registrado",
+      });
+    }
+
+    console.log(req.body);
+
+    res.status(500).json({
+      message: "Error en el registro",
+    });
   }
 };
