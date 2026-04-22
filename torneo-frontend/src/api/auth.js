@@ -1,17 +1,20 @@
 export const loginRequest = async (data) => {
-  const response = await fetch(`${VITE_API_URL}/api/auth/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/auth/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     },
-    body: JSON.stringify(data),
-  });
+  );
 
   return response.json();
 };
 
 export const registerRequest = async (data) => {
-  const res = await fetch(`${VITE_API_URL}/api/auth/register`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
