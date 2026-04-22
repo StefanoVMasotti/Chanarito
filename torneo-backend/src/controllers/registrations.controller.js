@@ -1,4 +1,4 @@
-import { pool } from "../db/connection.js";
+import pool from "../db/connection.js";
 
 export const createRegistration = async (req, res) => {
   try {

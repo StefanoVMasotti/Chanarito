@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { pool } from "../db/connection.js";
+import pool from "../db/connection.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
