@@ -2,7 +2,7 @@ export const createRegistrationRequest = async (data) => {
   const token = localStorage.getItem("token");
 
   const response = await fetch(
-    `${import.meta.env.VITE_API_URL}/registrations`,
+    `${import.meta.env.VITE_API_URL}/api/registrations`,
     {
       method: "POST",
       headers: {
@@ -62,12 +62,15 @@ export const getAllRegistrationsRequest = async () => {
 export const deleteRegistrationAdminRequest = async (id) => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/${id}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const res = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/registrations/admin/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
 
   return res.json();
 };
