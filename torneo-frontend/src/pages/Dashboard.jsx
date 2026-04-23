@@ -17,6 +17,7 @@ function Dashboard({ setToken }) {
   const navigate = useNavigate();
   const registeredIds = registrations.map((r) => r.category_id);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const fetchRegistrations = async () => {
     const data = await getMyRegistrationsRequest();
@@ -61,10 +62,14 @@ function Dashboard({ setToken }) {
 
   useEffect(() => {
     const fetchClubs = async () => {
-      const data = await getClubsRequest();
-      console.log("Type of clubs:", typeof clubs, "Value:", clubs);
-      console.log("clubs:", data);
-      setClubs(data);
+      try {
+        const data = await getClubsRequest();
+        setClubs(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchClubs();
@@ -90,6 +95,11 @@ function Dashboard({ setToken }) {
 
         <h2 className="text-xl font-semibold mb-3">Clubes registrados:</h2>
 
+        {loading ? (
+          <div className="flex justify-center my-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        ) : null}
         <ul>
           {Array.isArray(clubs) &&
             clubs.map((c) => (
