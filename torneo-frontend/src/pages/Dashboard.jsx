@@ -18,10 +18,17 @@ function Dashboard({ setToken }) {
   const registeredIds = registrations.map((r) => r.category_id);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loadingCats, setLoadingCats] = useState(true);
 
   const fetchRegistrations = async () => {
-    const data = await getMyRegistrationsRequest();
-    setRegistrations(data);
+    try {
+      const data = await getMyRegistrationsRequest();
+      setRegistrations(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingCats(false);
+    }
   };
 
   const handleDelete = (id) => {
@@ -96,21 +103,18 @@ function Dashboard({ setToken }) {
         <h2 className="text-xl font-semibold mb-3">Clubes registrados:</h2>
 
         {loading ? (
-          <div className="flex justify-center my-10">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          <div className="flex justify-center my-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
           </div>
-        ) : null}
-        <ul>
-          {Array.isArray(clubs) &&
-            clubs.map((c) => (
-              <li
-                key={c.id}
-                className="border text-white p-3 mb-2 rounded-lg bg-white/10"
-              >
+        ) : (
+          <ul>
+            {clubs.map((c) => (
+              <li key={c.id} className="border p-3 mb-2 rounded-lg bg-white/10">
                 <strong>{c.name}</strong> - {c.email}
               </li>
             ))}
-        </ul>
+          </ul>
+        )}
         <div className="flex flex-row">
           <button
             onClick={handleLogout}
@@ -162,7 +166,11 @@ function Dashboard({ setToken }) {
       <div className="mt-6 max-w-3xl mx-auto text-white bg-white/20 p-6 rounded-2xl shadow">
         <h3 className="font-semibold mb-2">Mis inscripciones</h3>
 
-        {registrations.length === 0 ? (
+        {loadingCats ? (
+          <div className="flex justify-center my-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+          </div>
+        ) : registrations.length === 0 ? (
           <p>No estás inscripto en ninguna categoría</p>
         ) : (
           <ul>
