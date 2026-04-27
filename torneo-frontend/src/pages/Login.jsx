@@ -2,6 +2,7 @@ import { useState } from "react";
 import { loginRequest } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { validateLogin } from "../utils/validations.jsx";
 
 function Login({ setToken }) {
   const [form, setForm] = useState({
@@ -21,6 +22,13 @@ function Login({ setToken }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const error = validateLogin(form);
+
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
     try {
       const res = await loginRequest(form);
 
@@ -29,12 +37,10 @@ function Login({ setToken }) {
         localStorage.setItem("token", res.token);
         localStorage.setItem("club", JSON.stringify(res.club));
         toast.dismiss();
-        toast.success("Login exitoso!");
+        toast.success("Login exitoso!", { autoClose: 2000 });
         setTimeout(() => {
-          //Antes actualizaba el estado del token, pero ahora no es necesario porque el ProtectedRoute se basa en el localStorage
-          //setToken(res.token);
           navigate("/dashboard");
-        }, 3000);
+        }, 2000);
 
         console.log("Login exitoso");
       } else {

@@ -92,9 +92,9 @@ function Admin() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-blue-950 p-6">
+    <div className="min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700 p-6">
       <div className="max-w-4xl mx-auto bg-white/20 text-white p-6 rounded-2xl shadow">
-        <h1 className="text-2xl font-bold mb-4">Panel Admin ⚽</h1>
+        <h1 className="text-2xl font-bold mb-4">Panel Administrador</h1>
 
         <input
           type="text"
@@ -108,12 +108,18 @@ function Admin() {
           <select
             value={filterYear}
             onChange={(e) => setFilterYear(e.target.value)}
-            className="border p-2 rounded mb-4"
+            className="border p-2 rounded mb-4  bg-white/20 text-white"
           >
-            <option value="">Todas las categorías</option>
+            <option value="" className="bg-black/20 text-black">
+              Todas las categorías
+            </option>
 
             {[...new Set(registrations.map((r) => r.year))].map((year) => (
-              <option key={year} value={year}>
+              <option
+                key={year}
+                value={year}
+                className="bg-black/20 text-black"
+              >
                 {year}
               </option>
             ))}
@@ -161,16 +167,16 @@ function Admin() {
           </tbody>
         </table>
       </div>
-      <div className="max-w-4xl mx-auto mt-4">
+      <div className="flex flex-row gap-2 max-w-4xl mx-auto mt-4">
         <button
           onClick={() => navigate("/dashboard")}
-          className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+          className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
         >
           Ir a Dashboard
         </button>
         <button
           onClick={handleDownloadPDF}
-          className="mb-4 bg-green-400 text-white px-4 py-2 rounded"
+          className="mb-4 bg-green-400 text-white px-4 py-2 rounded hover:bg-green-600"
         >
           Descargar PDF
         </button>
