@@ -6,12 +6,14 @@ import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import Admin from "./pages/Admin";
 import Register from "./pages/Register.jsx";
 import Landing from "./pages/Landing.jsx";
+import Information from "./pages/Information.jsx";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/information" element={<Information />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route

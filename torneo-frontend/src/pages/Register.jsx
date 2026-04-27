@@ -2,6 +2,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { registerRequest } from "../api/auth.js";
 import { useNavigate } from "react-router-dom";
+import { validateRegister } from "../utils/validations.jsx";
 
 function Register() {
   const [form, setForm] = useState({
@@ -23,11 +24,18 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const error = validateRegister(form);
+
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
     const res = await registerRequest(form);
 
     if (res.message === "Club registrado correctamente") {
       toast.success(res.message);
-      navigate("/");
+      navigate("/login");
     } else {
       toast.error(res.message);
     }

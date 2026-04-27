@@ -7,6 +7,10 @@ import { getMyRegistrationsRequest } from "../api/registrations";
 import { deleteRegistrationRequest } from "../api/registrations";
 import confirmDelete from "../utils/confirm.jsx";
 import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
+import Swal from "sweetalert2";
+import logout from "../utils/logout.jsx";
+import Cards from "../components/Cards.jsx";
 
 function Dashboard({ setToken }) {
   const club = JSON.parse(localStorage.getItem("club"));
@@ -17,24 +21,56 @@ function Dashboard({ setToken }) {
   const navigate = useNavigate();
   const registeredIds = registrations.map((r) => r.category_id);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [loadingCats, setLoadingCats] = useState(true);
 
   const fetchRegistrations = async () => {
-    const data = await getMyRegistrationsRequest();
-    setRegistrations(data);
+    try {
+      const data = await getMyRegistrationsRequest();
+      setRegistrations(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingCats(false);
+    }
   };
 
-  const handleDelete = (id) => {
-    confirmDelete(async () => {
-      const res = await deleteRegistrationRequest(id);
+  const fetchClubs = async () => {
+    try {
+      const data = await getClubsRequest();
+      setClubs(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      setMessage(res.message);
-      toast.info(res.message);
-      fetchRegistrations();
+  const fetchData = async () => {
+    const cats = await getCategoriesRequest();
+    setCategories(cats);
+  };
+
+  const handleDelete = async (id) => {
+    const confirmed = await confirmDelete();
+
+    if (!confirmed) return;
+
+    const res = await deleteRegistrationRequest(id);
+    await Swal.fire({
+      title: "Eliminado",
+      text: "La inscripción fue eliminada",
+      icon: "success",
+      timer: 2000,
+      showConfirmButton: false,
     });
+    fetchRegistrations();
   };
 
-  const handleLogout = () => {
-    if (!confirm("¿Seguro que querés cerrar sesión?")) return;
+  const handleLogout = async () => {
+    const confirmed = await logout();
+
+    if (!confirmed) return;
 
     localStorage.removeItem("token");
     localStorage.removeItem("club");
@@ -60,48 +96,35 @@ function Dashboard({ setToken }) {
   };
 
   useEffect(() => {
-    const fetchClubs = async () => {
-      const data = await getClubsRequest();
-      console.log("Type of clubs:", typeof clubs, "Value:", clubs);
-      console.log("clubs:", data);
-      setClubs(data);
-    };
-
+    fetchRegistrations();
     fetchClubs();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const cats = await getCategoriesRequest();
-      setCategories(cats);
-    };
-
     fetchData();
   }, []);
 
-  useEffect(() => {
-    fetchRegistrations();
-  }, []);
-
   return (
-    <div className="min-h-screen bg-blue-950 p-6">
-      <div className="max-w-3xl mx-auto text-white bg-white/20 p-6 rounded-2xl shadow flex flex-col items-center">
+    <div className="min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700 p-6">
+      <Cards>
         <h1 className="text-2xl font-bold mb-4">Bienvenido {club?.name}</h1>
-
         <h2 className="text-xl font-semibold mb-3">Clubes registrados:</h2>
 
-        <ul>
-          {Array.isArray(clubs) &&
-            clubs.map((c) => (
+        {loading ? (
+          <Spinner />
+        ) : (
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-2">
+            {clubs.map((c) => (
               <li
                 key={c.id}
-                className="border text-white p-3 mb-2 rounded-lg bg-white/10"
+                className="bg-white/10 p-3 rounded-lg flex justify-between items-center hover:bg-white/20 transition duration-200 hover:scale-[1.02]"
               >
-                <strong>{c.name}</strong> - {c.email}
+                <div>
+                  <p className="font-semibold">{c.name}</p>
+                  <p className="text-sm text-gray-300">{c.email}</p>
+                </div>
               </li>
             ))}
-        </ul>
-        <div className="flex flex-row">
+          </ul>
+        )}
+        <div className="flex flex-row gap-2 mt-4">
           <button
             onClick={handleLogout}
             className="mb-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
@@ -111,61 +134,69 @@ function Dashboard({ setToken }) {
           {club?.role === "admin" && (
             <button
               onClick={() => navigate("/admin")}
-              className="mb-4 bg-blue-500 text-white px-4 py-2 rounded"
+              className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Ir a Admin
             </button>
           )}
         </div>
-      </div>
-      <form
-        onSubmit={handleRegister}
-        className="mt-6 max-w-3xl mx-auto text-white bg-white/20 p-6 rounded-2xl shadow flex flex-col items-center justify-center"
-      >
-        <h3 className="font-semibold mb-2">Inscribirse a categoría</h3>
-        <div>
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
-            className="border p-2 mr-2 rounded bg-white/20 text-black/50"
-          >
-            <option value="">Seleccionar categoría</option>
-
-            {categories.map((cat) => (
-              <option
-                key={cat.id}
-                value={cat.id}
-                disabled={registeredIds.includes(cat.id)}
-                className="bg-black/20 text-black"
-              >
-                {cat.year}{" "}
-                {registeredIds.includes(cat.id) ? "(Ya inscripto)" : ""}
+      </Cards>
+      <Cards>
+        <form onSubmit={handleRegister} className="">
+          <h3 className="font-semibold mb-2 text-center">
+            Inscribirse a categoría
+          </h3>
+          <div>
+            <select
+              value={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              className="border p-2 mr-2 rounded bg-white/20 text-white"
+            >
+              <option value="" className="bg-black/20 text-black">
+                Seleccionar categoría
               </option>
-            ))}
-          </select>
 
-          <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
-            Inscribirme
-          </button>
-        </div>
-      </form>
-      <div className="mt-6 max-w-3xl mx-auto text-white bg-white/20 p-6 rounded-2xl shadow">
-        <h3 className="font-semibold mb-2">Mis inscripciones</h3>
+              {categories.map((cat) => (
+                <option
+                  key={cat.id}
+                  value={cat.id}
+                  disabled={registeredIds.includes(cat.id)}
+                  className="bg-black/20 text-black"
+                >
+                  {cat.year}{" "}
+                  {registeredIds.includes(cat.id) ? "(Ya inscripto)" : ""}
+                </option>
+              ))}
+            </select>
 
-        {registrations.length === 0 ? (
+            <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
+              Inscribirme
+            </button>
+          </div>
+        </form>
+      </Cards>
+
+      <div className="max-w-3xl mx-auto my-2 text-white bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-lg">
+        <h3 className="text-center font-semibold mb-2">Mis inscripciones</h3>
+
+        {loadingCats ? (
+          <Spinner />
+        ) : registrations.length === 0 ? (
           <p>No estás inscripto en ninguna categoría</p>
         ) : (
-          <ul>
+          <ul className="flex flex-col gap-1">
             {registrations.map((r) => (
               <li
                 key={r.id}
-                className="border p-3 mb-2 rounded-lg flex justify-between items-center"
+                className="bg-white/10 p-3 rounded-lg flex justify-between items-center hover:bg-white/20 transition duration-200 hover:scale-[1.02]"
               >
-                <span>Categoría {r.year}</span>
+                <span className="font-medium">Categoría {r.year}</span>
 
                 <button
-                  onClick={() => handleDelete(r.id)}
-                  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
+                  onClick={async () => {
+                    await handleDelete(r.id);
+                  }}
+                  className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-lg"
                 >
                   Eliminar
                 </button>
