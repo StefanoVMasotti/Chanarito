@@ -43,6 +43,11 @@ function Login({ setToken }) {
           navigate("/dashboard");
         }, 2000);
 
+        setForm({
+    email: "",
+    password: "",
+  });
+
         console.log("Login exitoso");
       } else {
         toast.dismiss();
