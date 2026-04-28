@@ -2,6 +2,8 @@ import { useState } from "react";
 import { loginRequest } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { validateLogin } from "../utils/validations.jsx";
+import Cards from "../components/Cards.jsx"
 
 function Login({ setToken }) {
   const [form, setForm] = useState({
@@ -21,6 +23,13 @@ function Login({ setToken }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const error = validateLogin(form);
+
+    if (error) {
+      toast.error(error);
+      return;
+    }
+
     try {
       const res = await loginRequest(form);
 
@@ -29,12 +38,10 @@ function Login({ setToken }) {
         localStorage.setItem("token", res.token);
         localStorage.setItem("club", JSON.stringify(res.club));
         toast.dismiss();
-        toast.success("Login exitoso!");
+        toast.success("Login exitoso!", { autoClose: 2000 });
         setTimeout(() => {
-          //Antes actualizaba el estado del token, pero ahora no es necesario porque el ProtectedRoute se basa en el localStorage
-          //setToken(res.token);
           navigate("/dashboard");
-        }, 3000);
+        }, 2000);
 
         console.log("Login exitoso");
       } else {
@@ -49,11 +56,13 @@ function Login({ setToken }) {
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-blue-950">
+    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700">
+      <Cards>
+
       <form
         onSubmit={handleSubmit}
-        className="bg-white/20 p-8 rounded-2xl shadow-lg w-80"
-      >
+        className="w-80"
+        >
         <h2 className="text-2xl text-white font-bold mb-6 text-center">
           Torneo Chañarito
         </h2>
@@ -64,7 +73,7 @@ function Login({ setToken }) {
           placeholder="Email"
           onChange={handleChange}
           className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
-        />
+          />
 
         <input
           type="password"
@@ -72,7 +81,7 @@ function Login({ setToken }) {
           placeholder="Password"
           onChange={handleChange}
           className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
-        />
+          />
 
         <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-950 transition">
           Ingresar
@@ -82,11 +91,12 @@ function Login({ setToken }) {
           <span
             onClick={() => navigate("/register")}
             className="text-blue-400 font-bold underline cursor-pointer"
-          >
+            >
             Registrate
           </span>
         </p>
       </form>
+            </Cards>
     </div>
   );
 }
