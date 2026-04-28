@@ -64,29 +64,30 @@ function Login({ setToken }) {
     <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700">
       <Cards>
 
-      <form
-        onSubmit={handleSubmit}
-        className="w-80"
-        >
+      <form onSubmit={handleSubmit} autoComplete="off" className="w-80">
         <h2 className="text-2xl text-white font-bold mb-6 text-center">
           Torneo Chañarito
         </h2>
 
         <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
-          />
+  type="email"
+  name="email"
+  placeholder="Email"
+  value={form.email}
+  onChange={handleChange}
+  autoComplete="off"
+  className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+/>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
-          />
+<input
+  type="password"
+  name="password"
+  placeholder="Password"
+  value={form.password}
+  onChange={handleChange}
+  autoComplete="new-password"
+  className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+/>
 
         <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-950 transition">
           Ingresar
