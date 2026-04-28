@@ -37,6 +37,12 @@ function Register() {
     if (res.message === "Club registrado correctamente") {
       toast.success(res.message);
       navigate("/login");
+      setForm({
+    name: "",
+    coordinator_name: "",
+    email: "",
+    password: "",
+  });
     } else {
       toast.error(res.message);
     }
@@ -48,6 +54,7 @@ function Register() {
       <form
         onSubmit={handleSubmit}
         className="w-80"
+        autocomplete="off"
         >
         <h2 className="text-xl font-bold mb-4 text-center">Registro de Club</h2>
 
@@ -55,6 +62,7 @@ function Register() {
           type="text"
           name="name"
           placeholder="Nombre del club"
+          value={form.name}
           onChange={handleChange}
           className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
           />
@@ -63,6 +71,7 @@ function Register() {
           type="text"
           name="coordinator_name"
           placeholder="Nombre del Coordinador"
+          value={form.coordinator_name}
           onChange={handleChange}
           className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
           />
@@ -71,6 +80,7 @@ function Register() {
           type="email"
           name="email"
           placeholder="Email"
+          value={form.email}
           onChange={handleChange}
           className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
           />
@@ -79,6 +89,7 @@ function Register() {
           type="password"
           name="password"
           placeholder="Password"
+          value={form.password}
           onChange={handleChange}
           className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
           />
