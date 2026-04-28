@@ -5,6 +5,7 @@ import img2 from "../assets/2019(1).jpeg";
 import img3 from "../assets/2018.jfif";
 import img4 from "../assets/2017(1).jfif";
 import img5 from "../assets/2016(1).jpg";
+import img6 from "../assets/2015(1).jfif"
 
 function Landing() {
   const navigate = useNavigate();
@@ -99,7 +100,7 @@ function Landing() {
             </div>
             <div className="relative group">
               <img
-                src={img5}
+                src={img6}
                 className="rounded-xl h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center">
