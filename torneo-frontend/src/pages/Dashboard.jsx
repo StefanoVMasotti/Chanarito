@@ -96,16 +96,14 @@ function Dashboard({ setToken }) {
   };
 
   useEffect(() => {
-    fetchRegistrations();
-    fetchClubs();
-    fetchData();
+    Promise.all([fetchRegistrations(), fetchClubs(), fetchData()]);
   }, []);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700 p-6">
       <Cards>
-        <h1 className="text-2xl font-bold mb-4">Bienvenido {club?.name}</h1>
-        <h2 className="text-xl font-semibold mb-3">Clubes registrados:</h2>
+        <h1 className="text-2xl font-semibold mb-4">Bienvenido {club?.name}</h1>
+        <h2 className="text-xl font-medium mb-3">Clubes registrados:</h2>
 
         {loading ? (
           <Spinner />
@@ -118,7 +116,7 @@ function Dashboard({ setToken }) {
               >
                 <div>
                   <p className="font-semibold">{c.name}</p>
-                  <p className="text-sm text-gray-300">{c.email}</p>
+                  <p className="text-sm text-stone-300">{c.email}</p>
                 </div>
               </li>
             ))}

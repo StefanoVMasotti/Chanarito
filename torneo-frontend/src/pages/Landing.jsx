@@ -5,7 +5,7 @@ import img2 from "../assets/2019(1).jpeg";
 import img3 from "../assets/2018.jfif";
 import img4 from "../assets/2017(1).jfif";
 import img5 from "../assets/2016(1).jpg";
-import img6 from "../assets/2015(1).jfif"
+import img6 from "../assets/2015(1).jfif";
 
 function Landing() {
   const navigate = useNavigate();
@@ -14,8 +14,7 @@ function Landing() {
     <MainLayout>
       <section className="flex flex-col items-center justify-center text-center mt-16 px-4">
         <div className="max-w-5xl mx-auto w-full flex flex-col items-center">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white">
-            {" "}
+          <h1 className="text-5xl md:text-6xl font-semibold text-white">
             Chañarito 2027
           </h1>
           <p className="mt-6 text-white/80 text-lg">
@@ -48,13 +47,14 @@ function Landing() {
       </section>
       <section className="mt-24 w-full text-center">
         <div className="bg-white/10 backdrop-blur-lg p-6 rounded-2xl shadow">
-          <h2 className="text-2xl font-bold text-white mb-4">
+          <h2 className="text-2xl font-medium text-white mb-4">
             Galería de Fotos
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2">
             <div className="relative group">
               <img
                 src={img1}
+                alt="Foto de Categoría 2020"
                 className="rounded-xl h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
 
@@ -65,6 +65,7 @@ function Landing() {
             <div className="relative group">
               <img
                 src={img2}
+                alt="Foto de Categoría 2019"
                 className="rounded-xl h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center">
@@ -74,6 +75,7 @@ function Landing() {
             <div className="relative group">
               <img
                 src={img3}
+                alt="Foto de Categoría 2018"
                 className="rounded-xl h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center">
@@ -83,6 +85,7 @@ function Landing() {
             <div className="relative group">
               <img
                 src={img4}
+                alt="Foto de Categoría 2017"
                 className="rounded-xl h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center">
@@ -92,6 +95,7 @@ function Landing() {
             <div className="relative group">
               <img
                 src={img5}
+                alt="Foto de Categoría 2016"
                 className="rounded-xl h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center">
@@ -101,6 +105,7 @@ function Landing() {
             <div className="relative group">
               <img
                 src={img6}
+                alt="Foto de Categoría 2015"
                 className="rounded-xl h-48 w-full object-cover transition duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center">

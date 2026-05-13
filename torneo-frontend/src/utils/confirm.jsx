@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export const confirmDelete = async () => {
+const confirmDelete = async () => {
   const result = await Swal.fire({
     title: "¿Estás seguro?",
     text: "Deseas eliminar esta inscripción, Esta acción no se puede deshacer.",

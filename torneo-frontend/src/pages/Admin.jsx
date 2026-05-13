@@ -10,8 +10,9 @@ import { toast } from "react-toastify";
 import confirmDelete from "../utils/confirm.jsx";
 import Swal from "sweetalert2";
 import Spinner from "../components/Spinner";
-import Cards from "../components/Cards.jsx"
+import Cards from "../components/Cards.jsx";
 
+const dateFormatter = new Intl.DateTimeFormat("es-AR");
 
 function Admin() {
   const [registrations, setRegistrations] = useState([]);
@@ -26,7 +27,10 @@ function Admin() {
   const fetchData = async () => {
     try {
       const data = await getAllRegistrationsRequest();
-      setRegistrations(data);
+
+      formattedDate: dateFormatter.format(new Date(r.created_at));
+
+      setRegistrations(formattedData);
     } catch (error) {
       console.error(error);
     } finally {
@@ -42,11 +46,11 @@ function Admin() {
     return matchesSearch && matchesYear;
   });
 
-  const sortedRegistrations = [...filteredRegistrations].sort((a, b) => {
+  const sortedRegistrations = filteredRegistrations.toSorted((a, b) => {
     if (sortOrder === "asc") {
-      return new Date(a.year) - new Date(b.year);
+      return Number(a.year) - Number(b.year);
     } else {
-      return new Date(b.year) - new Date(a.year);
+      return Number(b.year) - Number(a.year);
     }
   });
 
@@ -68,7 +72,7 @@ function Admin() {
     const tableData = sortedRegistrations.map((r) => [
       r.club,
       r.year,
-      new Date(r.created_at).toLocaleDateString(),
+      r.formattedDate,
     ]);
 
     //Tabla
@@ -113,7 +117,7 @@ function Admin() {
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700 p-6">
       <div className="max-w-4xl mx-auto text-white bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-lg">
-        <h1 className="text-2xl font-bold mb-4">Panel Administrador</h1>
+        <h1 className="text-2xl font-semibold mb-4">Panel Administrador</h1>
 
         <input
           type="text"
@@ -147,44 +151,43 @@ function Admin() {
             Orden:
             <button
               onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
-              className="mb-4 bg-gray-500 hover:bg-gray-800 text-white px-3 py-1 rounded"
+              className="mb-4 bg-stone-500 hover:bg-stone-800 text-white px-3 py-1 rounded"
             >
               {sortOrder === "asc" ? "Ascendente" : "Descendente"}
             </button>
           </span>
         </div>
-        { loading ? ( <Spinner />) :
-        (
-        <table className="w-full border">
-          <thead>
-            <tr>
-              <th className="p-2 border">Club</th>
-              <th className="p-2 border">Categoría</th>
-              <th className="p-2 border">Fecha</th>
-              <th className="p-2 border">Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {sortedRegistrations.map((r) => (
-              <tr key={r.id}>
-                <td className="p-2 border">{r.club}</td>
-                <td className="p-2 border">{r.year}</td>
-                <td className="p-2 border">
-                  {new Date(r.created_at).toLocaleDateString()}
-                </td>
-                <td className="p-2 border">
-                  <button
-                    onClick={() => handleDelete(r.id)}
-                    className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
-                  >
-                    Eliminar
-                  </button>
-                </td>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <table className="w-full border">
+            <thead>
+              <tr>
+                <th className="p-2 border">Club</th>
+                <th className="p-2 border">Categoría</th>
+                <th className="p-2 border">Fecha</th>
+                <th className="p-2 border">Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+
+            <tbody>
+              {sortedRegistrations.map((r) => (
+                <tr key={r.id}>
+                  <td className="p-2 border">{r.club}</td>
+                  <td className="p-2 border">{r.year}</td>
+                  <td className="p-2 border">{r.formattedDate}</td>
+                  <td className="p-2 border">
+                    <button
+                      onClick={() => handleDelete(r.id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-700"
+                    >
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
       <div className="flex flex-row gap-2 max-w-4xl mx-auto mt-4">

@@ -7,7 +7,7 @@ function Information() {
   return (
     <MainLayout>
       <Cards>
-        <h1 className="text-2xl font-bold mb-4">Información del torneo</h1>
+        <h1 className="text-2xl font-semibold mb-4">Información del torneo</h1>
         <img
           src={chañarense}
           alt="Chañarito 2027"
@@ -41,7 +41,7 @@ function Information() {
         </p>
       </Cards>
       <Cards>
-        <h2 className="text-xl underline font-bold mb-4">
+        <h2 className="text-xl underline font-semibold mb-4">
           Organización del Predio
         </h2>
         <img src={chañarense2} alt="Chañarito 2027" />
