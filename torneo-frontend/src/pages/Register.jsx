@@ -32,14 +32,26 @@ function Register() {
       return;
     }
 
-    const res = await registerRequest(form);
+    try {
+      const res = await registerRequest(form);
+  
+      if (res.message === "Club registrado correctamente") {
+        toast.success(res.message);
+        navigate("/login");
+        setForm({
+          name: "",
+          coordinator_name: "",
+          email: "",
+          password: "",
+        });
+      } else {
+        toast.error(res.message);
+      }
+    } catch (error) {
+      toast.error("Error en BD");
+      console.error("Error en Register", error);
+    }    
 
-    if (res.message === "Club registrado correctamente") {
-      toast.success(res.message);
-      navigate("/login");
-    } else {
-      toast.error(res.message);
-    }
   };
 
   return (
