@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { loginRequest } from "../api/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -35,21 +35,16 @@ function Login({ setToken }) {
       const res = await loginRequest(form);
 
       if (res.token) {
-        //Guardo el Token y el club en el localStorage
         localStorage.setItem("token", res.token);
         localStorage.setItem(CLUB_STORAGE_KEY, JSON.stringify(res.club));
-        const club = JSON.parse(localStorage.getItem(CLUB_STORAGE_KEY));
         toast.dismiss();
         toast.success("Login exitoso!", { autoClose: 2000 });
         setTimeout(() => {
           navigate("/dashboard");
         }, 2000);
-
-        console.log("Login exitoso");
       } else {
         toast.dismiss();
         toast.info(res.message);
-        console.log("Error:", res.message);
       }
     } catch (error) {
       toast.error("Error en BD");
@@ -58,19 +53,22 @@ function Login({ setToken }) {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700">
+    <div className="app-bg flex items-center justify-center min-h-screen px-4">
       <Cards>
-        <form onSubmit={saveUserProfile} className="w-80">
-          <h2 className="text-2xl text-white font-semibold mb-6 text-center">
-            Torneo Chañarito
+        <form onSubmit={saveUserProfile} className="w-full max-w-sm">
+          <h2 className="text-3xl font-extrabold mb-2 text-center tracking-tight">
+            Torneo Chanarito
           </h2>
+          <p className="text-center text-[15px] text-blue-100/85 mb-7">
+            Inicia sesion para administrar tus inscripciones
+          </p>
 
           <input
             type="email"
             name="email"
             placeholder="Email"
             onChange={listenForm}
-            className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+            className="field mb-4"
           />
 
           <input
@@ -78,17 +76,18 @@ function Login({ setToken }) {
             name="password"
             placeholder="Password"
             onChange={listenForm}
-            className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+            className="field mb-5"
           />
 
-          <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-950 transition">
+          <button className="primary-btn w-full p-3 rounded-xl font-semibold">
             Ingresar
           </button>
-          <p className="text-sm mt-3 text-white text-center">
-            ¿No tenés cuenta?
+          <p className="text-sm mt-4 text-blue-100 text-center">
+            No tenes cuenta?{" "}
             <button
+              type="button"
               onClick={() => navigate("/register")}
-              className="text-blue-400 font-bold underline cursor-pointer"
+              className="text-blue-200 font-bold underline cursor-pointer"
             >
               Registrate
             </button>
@@ -100,3 +99,4 @@ function Login({ setToken }) {
 }
 
 export default Login;
+

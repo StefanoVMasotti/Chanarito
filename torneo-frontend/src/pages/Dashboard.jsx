@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { getClubsRequest } from "../api/clubs";
 import { useNavigate } from "react-router-dom";
 import { createRegistrationRequest } from "../api/registrations";
@@ -13,14 +13,16 @@ import logout from "../utils/logout.jsx";
 import Cards from "../components/Cards.jsx";
 
 function Dashboard({ setToken }) {
-  const club = JSON.parse(localStorage.getItem("club"));
+  const CLUB_STORAGE_KEY = "club:v1";
+  const club = JSON.parse(
+    localStorage.getItem(CLUB_STORAGE_KEY) || localStorage.getItem("club"),
+  );
   const [clubs, setClubs] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
   const [registrations, setRegistrations] = useState([]);
   const navigate = useNavigate();
   const registeredIds = registrations.map((r) => r.category_id);
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [loadingCats, setLoadingCats] = useState(true);
 
@@ -53,13 +55,12 @@ function Dashboard({ setToken }) {
 
   const handleDelete = async (id) => {
     const confirmed = await confirmDelete();
-
     if (!confirmed) return;
 
-    const res = await deleteRegistrationRequest(id);
+    await deleteRegistrationRequest(id);
     await Swal.fire({
       title: "Eliminado",
-      text: "La inscripción fue eliminada",
+      text: "La inscripcion fue eliminada",
       icon: "success",
       timer: 2000,
       showConfirmButton: false,
@@ -69,13 +70,12 @@ function Dashboard({ setToken }) {
 
   const handleLogout = async () => {
     const confirmed = await logout();
-
     if (!confirmed) return;
 
     localStorage.removeItem("token");
+    localStorage.removeItem(CLUB_STORAGE_KEY);
     localStorage.removeItem("club");
-    toast.success("Cerrando Sesión");
-    //setToken(null); // No es necesario actualizar el estado del token porque el ProtectedRoute se basa en el localStorage
+    toast.success("Cerrando sesion");
     setTimeout(() => {
       navigate("/");
     }, 2500);
@@ -84,14 +84,11 @@ function Dashboard({ setToken }) {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    if (categoryId === "") return toast.info("Seleccione una categoría");
+    if (categoryId === "") return toast.info("Seleccione una categoria");
 
-    const res = await createRegistrationRequest({
-      category_id: categoryId,
-    });
-
+    await createRegistrationRequest({ category_id: categoryId });
     fetchRegistrations();
-    toast.success("Inscripción Exitosa!");
+    toast.success("Inscripcion exitosa");
     setCategoryId("");
   };
 
@@ -100,101 +97,81 @@ function Dashboard({ setToken }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700 p-6">
+    <div className="app-bg p-4 md:p-6">
       <Cards>
-        <h1 className="text-2xl font-semibold mb-4">Bienvenido {club?.name}</h1>
-        <h2 className="text-xl font-medium mb-3">Clubes registrados:</h2>
+        <h1 className="text-3xl font-extrabold mb-1 text-center">Bienvenido {club?.name}</h1>
+        <p className="text-blue-100/85 mb-6 text-center">Gestiona tus equipos y categorias desde tu panel</p>
 
-        {loading ? (
-          <Spinner />
-        ) : (
-          <ul className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            {clubs.map((c) => (
-              <li
-                key={c.id}
-                className="bg-white/10 p-3 rounded-lg flex justify-between items-center hover:bg-white/20 transition duration-200 hover:scale-[1.02]"
-              >
-                <div>
-                  <p className="font-semibold">{c.name}</p>
-                  <p className="text-sm text-stone-300">{c.email}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className="flex flex-row gap-2 mt-4">
-          <button
-            onClick={handleLogout}
-            className="mb-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
-          >
-            Cerrar sesión
+        <div className="w-full flex flex-wrap gap-2 mb-5 justify-center">
+          <button onClick={handleLogout} className="secondary-btn px-4 py-2 rounded-xl">
+            Cerrar sesion
           </button>
           {club?.role === "admin" && (
             <button
               onClick={() => navigate("/admin")}
-              className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="primary-btn px-4 py-2 rounded-xl font-semibold"
             >
               Panel Administrador
             </button>
           )}
         </div>
+
+        <h2 className="text-xl font-semibold mb-3 w-full">Clubes registrados</h2>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {clubs.map((c) => (
+              <li key={c.id} className="glass-panel rounded-2xl p-4">
+                <p className="font-semibold text-base">{c.name}</p>
+                <p className="text-sm text-blue-100/80">{c.email}</p>
+              </li>
+            ))}
+          </ul>
+        )}
       </Cards>
+
       <Cards>
-        <form onSubmit={handleRegister} className="">
-          <h3 className="font-semibold mb-2 text-center">
-            Inscribirse a categoría
-          </h3>
-          <div>
+        <form onSubmit={handleRegister} className="w-full">
+          <h3 className="font-semibold mb-3 text-center text-xl">Inscribirse a categoria</h3>
+          <div className="flex flex-col md:flex-row gap-2">
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
-              className="border p-2 mr-2 rounded bg-white/20 text-white"
+              className="field"
             >
-              <option value="" className="bg-black/20 text-black">
-                Seleccionar categoría
-              </option>
-
+              <option value="">Seleccionar categoria</option>
               {categories.map((cat) => (
-                <option
-                  key={cat.id}
-                  value={cat.id}
-                  disabled={registeredIds.includes(cat.id)}
-                  className="bg-black/20 text-black"
-                >
-                  {cat.year}{" "}
-                  {registeredIds.includes(cat.id) ? "(Ya inscripto)" : ""}
+                <option key={cat.id} value={cat.id} disabled={registeredIds.includes(cat.id)}>
+                  {cat.year} {registeredIds.includes(cat.id) ? "(Ya inscripto)" : ""}
                 </option>
               ))}
             </select>
 
-            <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
+            <button className="primary-btn px-4 py-3 rounded-xl font-semibold md:min-w-48">
               Inscribirme
             </button>
           </div>
         </form>
       </Cards>
 
-      <div className="max-w-3xl mx-auto my-2 text-white bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-lg">
-        <h3 className="text-center font-semibold mb-2">Mis inscripciones</h3>
+      <div className="glass-panel max-w-4xl mx-auto my-3 p-6 md:p-8 rounded-3xl">
+        <h3 className="text-center font-semibold mb-3 text-xl">Mis inscripciones</h3>
 
         {loadingCats ? (
           <Spinner />
         ) : registrations.length === 0 ? (
-          <p>No estás inscripto en ninguna categoría</p>
+          <p className="text-blue-100/90">No estas inscripto en ninguna categoria</p>
         ) : (
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col gap-2">
             {registrations.map((r) => (
-              <li
-                key={r.id}
-                className="bg-white/10 p-3 rounded-lg flex justify-between items-center hover:bg-white/20 transition duration-200 hover:scale-[1.02]"
-              >
-                <span className="font-medium">Categoría {r.year}</span>
-
+              <li key={r.id} className="glass-panel rounded-2xl p-4 flex justify-between items-center">
+                <span className="font-medium">Categoria {r.year}</span>
                 <button
                   onClick={async () => {
                     await handleDelete(r.id);
                   }}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-lg"
+                  className="secondary-btn px-3 py-2 rounded-lg"
                 >
                   Eliminar
                 </button>
@@ -208,3 +185,4 @@ function Dashboard({ setToken }) {
 }
 
 export default Dashboard;
+

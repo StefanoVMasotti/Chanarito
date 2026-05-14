@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { toast } from "react-toastify";
 import { registerRequest } from "../api/auth.js";
 import { useNavigate } from "react-router-dom";
@@ -43,27 +43,30 @@ function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-blue-950 via-blue-900 to-blue-700">
+    <div className="app-bg flex items-center justify-center min-h-screen px-4">
       <Cards>
-        <form onSubmit={saveUserProfile} className="w-80">
-          <h2 className="text-xl font-medium mb-4 text-center">
+        <form onSubmit={saveUserProfile} className="w-full max-w-sm">
+          <h2 className="text-3xl font-extrabold mb-2 text-center tracking-tight">
             Registro de Club
           </h2>
+          <p className="text-center text-[15px] text-blue-100/85 mb-7">
+            Crea tu cuenta para participar del torneo
+          </p>
 
           <input
             type="text"
             name="name"
             placeholder="Nombre del club"
             onChange={listenForm}
-            className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+            className="field mb-4"
           />
 
           <input
             type="text"
             name="coordinator_name"
-            placeholder="Nombre del Coordinador"
+            placeholder="Nombre del coordinador"
             onChange={listenForm}
-            className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+            className="field mb-4"
           />
 
           <input
@@ -71,7 +74,7 @@ function Register() {
             name="email"
             placeholder="Email"
             onChange={listenForm}
-            className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+            className="field mb-4"
           />
 
           <input
@@ -79,19 +82,20 @@ function Register() {
             name="password"
             placeholder="Password"
             onChange={listenForm}
-            className="w-full text-white mb-4 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-white"
+            className="field mb-5"
           />
 
-          <button className="w-full bg-blue-700 text-white p-3 rounded-lg hover:bg-blue-950 transition">
+          <button className="primary-btn w-full p-3 rounded-xl font-semibold">
             Registrarse
           </button>
-          <p className="text-sm mt-3 text-white text-center">
-            ¿Tenés cuenta?
+          <p className="text-sm mt-4 text-blue-100 text-center">
+            Ya tenes cuenta?{" "}
             <button
+              type="button"
               onClick={() => navigate("/login")}
-              className="text-blue-400 font-bold underline cursor-pointer"
+              className="text-blue-200 font-bold underline cursor-pointer"
             >
-              Iniciar sesión
+              Iniciar sesion
             </button>
           </p>
         </form>
@@ -101,3 +105,4 @@ function Register() {
 }
 
 export default Register;
+

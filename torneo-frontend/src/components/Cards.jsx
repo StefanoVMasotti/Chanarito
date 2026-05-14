@@ -1,6 +1,6 @@
 function Card({ children }) {
   return (
-    <div className="flex flex-col items-center max-w-3xl mx-auto my-2 text-white bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-lg">
+    <div className="glass-panel fade-up flex flex-col items-center max-w-4xl mx-auto my-3 text-white p-6 md:p-8 rounded-3xl">
       {children}
     </div>
   );
