@@ -1,1 +1,105 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+:root {
+  --bg-1: #071432;
+  --bg-2: #102c6b;
+  --bg-3: #1d4dbe;
+  --surface: rgba(255, 255, 255, 0.1);
+  --surface-strong: rgba(255, 255, 255, 0.16);
+  --border-soft: rgba(255, 255, 255, 0.22);
+  --text-main: #f4f8ff;
+  --text-muted: #c9d8ff;
+  --primary: #2f6bff;
+  --primary-hover: #1f55d8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  color: var(--text-main);
+  background: radial-gradient(circle at 12% 20%, #2b66ff2f 0%, transparent 30%),
+    radial-gradient(circle at 85% 10%, #7dc4ff2b 0%, transparent 34%),
+    linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app-bg {
+  min-height: 100vh;
+  background: transparent;
+}
+
+.glass-panel {
+  background: linear-gradient(165deg, var(--surface-strong), var(--surface));
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 20px 45px rgba(3, 16, 46, 0.35);
+}
+
+.primary-btn {
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 10px 20px rgba(27, 83, 226, 0.35);
+}
+
+.secondary-btn {
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  transform: translateY(-1px);
+}
+
+.field {
+  width: 100%;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  padding: 0.72rem 0.88rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.field::placeholder {
+  color: #d9e4ffb8;
+}
+
+.field:focus {
+  border-color: #a9c8ff;
+  box-shadow: 0 0 0 3px rgba(114, 164, 255, 0.25);
+}
+
+.fade-up {
+  animation: fadeUp 0.45s ease both;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

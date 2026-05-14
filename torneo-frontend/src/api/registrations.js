@@ -1,13 +1,19 @@
-export const createRegistrationRequest = async (data) => {
+const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
 
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
+
+export const createRegistrationRequest = async (data) => {
   const response = await fetch(
     `${import.meta.env.VITE_API_URL}/api/registrations`,
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        ...getAuthHeaders(),
       },
       body: JSON.stringify(data),
     },
@@ -17,27 +23,19 @@ export const createRegistrationRequest = async (data) => {
 };
 
 export const getMyRegistrationsRequest = async () => {
-  const token = localStorage.getItem("token");
-
   const res = await fetch(`${import.meta.env.VITE_API_URL}/api/registrations`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getAuthHeaders(),
   });
 
   return res.json();
 };
 
 export const deleteRegistrationRequest = async (id) => {
-  const token = localStorage.getItem("token");
-
   const res = await fetch(
     `${import.meta.env.VITE_API_URL}/api/registrations/${id}`,
     {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     },
   );
 
@@ -45,14 +43,10 @@ export const deleteRegistrationRequest = async (id) => {
 };
 
 export const getAllRegistrationsRequest = async () => {
-  const token = localStorage.getItem("token");
-
   const res = await fetch(
     `${import.meta.env.VITE_API_URL}/api/registrations/all`,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     },
   );
 
@@ -60,15 +54,11 @@ export const getAllRegistrationsRequest = async () => {
 };
 
 export const deleteRegistrationAdminRequest = async (id) => {
-  const token = localStorage.getItem("token");
-
   const res = await fetch(
     `${import.meta.env.VITE_API_URL}/api/registrations/admin/${id}`,
     {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: getAuthHeaders(),
     },
   );
 

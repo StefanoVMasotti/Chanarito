@@ -1,6 +1,6 @@
 import Swal from "sweetalert2";
 
-export const logout = async () => {
+const logout = async () => {
   const result = await Swal.fire({
     title: "¿Estás seguro?",
     text: "Deseas cerrar sesión, Esta acción no se puede deshacer.",
