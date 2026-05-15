@@ -53,9 +53,9 @@ export const loginClub = async (req, res) => {
 
 export const register = async (req, res) => {
   try {
-    const { name, coordinator_name, email, password } = req.body;
+    const { name, coordinator_name, email, password, phone } = req.body;
 
-    if (!name || !coordinator_name || !email || !password) {
+    if (!name || !coordinator_name || !email || !password || !phone) {
       return res.status(400).json({
         message: "Todos los campos son obligatorios",
       });
@@ -66,10 +66,10 @@ export const register = async (req, res) => {
 
     //guardar
     const result = await pool.query(
-      `INSERT INTO clubs (name, coordinator_name, email, password, role)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, name, coordinator_name, email, role`,
-      [name, coordinator_name, email, hashedPassword, "club"],
+      `INSERT INTO clubs (name, coordinator_name, email, password, role, phone)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id, name, coordinator_name, email, role, phone`,
+      [name, coordinator_name, email, hashedPassword, "club", phone],
     );
 
     res.json({

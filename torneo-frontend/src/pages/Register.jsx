@@ -10,7 +10,9 @@ function Register() {
     name: "",
     coordinator_name: "",
     email: "",
+    phone: "",
     password: "",
+    confirmPassword: "",
   });
 
   const navigate = useNavigate();
@@ -26,13 +28,20 @@ function Register() {
     e.preventDefault();
 
     const error = validateRegister(form);
-
     if (error) {
       toast.error(error);
       return;
     }
 
-    const res = await registerRequest(form);
+    const payload = {
+      name: form.name,
+      coordinator_name: form.coordinator_name,
+      email: form.email,
+      phone: form.phone,
+      password: form.password,
+    };
+
+    const res = await registerRequest(payload);
 
     if (res.message === "Club registrado correctamente") {
       toast.success(res.message);
@@ -78,9 +87,25 @@ function Register() {
           />
 
           <input
+            type="tel"
+            name="phone"
+            placeholder="Telefono"
+            onChange={listenForm}
+            className="field mb-4"
+          />
+
+          <input
             type="password"
             name="password"
-            placeholder="Password"
+            placeholder="Contraseña"
+            onChange={listenForm}
+            className="field mb-4"
+          />
+
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Repetir contraseña"
             onChange={listenForm}
             className="field mb-5"
           />
@@ -105,4 +130,3 @@ function Register() {
 }
 
 export default Register;
-
