@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { validateLogin } from "../utils/validations.jsx";
 import Cards from "../components/Cards.jsx";
+import Footer from "../components/Footer.jsx";
 
 function Login({ setToken }) {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const CLUB_STORAGE_KEY = "club:v1";
   const navigate = useNavigate();
@@ -53,50 +55,61 @@ function Login({ setToken }) {
   };
 
   return (
-    <div className="app-bg flex items-center justify-center min-h-screen px-4">
-      <Cards>
-        <form onSubmit={saveUserProfile} className="w-full max-w-sm">
-          <h2 className="text-3xl font-extrabold mb-2 text-center tracking-tight">
-            Torneo Chanarito
-          </h2>
-          <p className="text-center text-[15px] text-blue-100/85 mb-7">
-            Inicia sesion para administrar tus inscripciones
-          </p>
+    <div className="app-bg min-h-screen flex flex-col">
+      <div className="flex-1 flex items-center justify-center px-4">
+        <Cards>
+          <form onSubmit={saveUserProfile} className="w-full max-w-sm">
+            <h2 className="text-3xl font-extrabold mb-2 text-center tracking-tight">
+              Torneo Chanarito
+            </h2>
+            <p className="text-center text-[15px] text-blue-100/85 mb-7">
+              Inicia sesion para administrar tus inscripciones
+            </p>
 
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={listenForm}
-            className="field mb-4"
-          />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              onChange={listenForm}
+              className="field mb-4"
+            />
 
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={listenForm}
-            className="field mb-5"
-          />
+            <div className="relative mb-5">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                onChange={listenForm}
+                className="field pr-20"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs secondary-btn px-2 py-1 rounded-md"
+              >
+                {showPassword ? "Ocultar" : "Mostrar"}
+              </button>
+            </div>
 
-          <button className="primary-btn w-full p-3 rounded-xl font-semibold">
-            Ingresar
-          </button>
-          <p className="text-sm mt-4 text-blue-100 text-center">
-            No tenes cuenta?{" "}
-            <button
-              type="button"
-              onClick={() => navigate("/register")}
-              className="text-blue-200 font-bold underline cursor-pointer"
-            >
-              Registrate
+            <button className="primary-btn w-full p-3 rounded-xl font-semibold">
+              Ingresar
             </button>
-          </p>
-        </form>
-      </Cards>
+            <p className="text-sm mt-4 text-blue-100 text-center">
+              No tenes cuenta?{" "}
+              <button
+                type="button"
+                onClick={() => navigate("/register")}
+                className="text-blue-200 font-bold underline cursor-pointer"
+              >
+                Registrate
+              </button>
+            </p>
+          </form>
+        </Cards>
+      </div>
+      <Footer />
     </div>
   );
 }
 
 export default Login;
-

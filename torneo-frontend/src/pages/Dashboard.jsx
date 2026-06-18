@@ -11,6 +11,7 @@ import Spinner from "../components/Spinner";
 import Swal from "sweetalert2";
 import logout from "../utils/logout.jsx";
 import Cards from "../components/Cards.jsx";
+import Footer from "../components/Footer.jsx";
 
 function Dashboard({ setToken }) {
   const CLUB_STORAGE_KEY = "club:v1";
@@ -317,8 +318,11 @@ function Dashboard({ setToken }) {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }
 
 export default Dashboard;
+
+
