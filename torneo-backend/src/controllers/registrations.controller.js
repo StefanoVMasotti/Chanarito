@@ -1,4 +1,6 @@
-import pool from "../db/connection.js";
+﻿import pool from "../db/connection.js";
+import { scheduleRegistrationSummary } from "../services/registration-email-queue.service.js";
+import { sendAdminCategoryDeletedEmail } from "../services/email.service.js";
 
 export const createRegistration = async (req, res) => {
   try {
@@ -12,14 +14,15 @@ export const createRegistration = async (req, res) => {
       [club_id, category_id],
     );
 
+    scheduleRegistrationSummary(club_id);
+
     res.json(result.rows[0]);
   } catch (error) {
     console.error(error);
 
-    //error de duplicado (clave única)
     if (error.code === "23505") {
       return res.status(400).json({
-        message: "Ya estás inscripto en esta categoría",
+        message: "Ya estas inscripto en esta categoria",
       });
     }
 
@@ -51,6 +54,15 @@ export const deleteRegistration = async (req, res) => {
     const { id } = req.params;
     const club_id = req.user.id;
 
+    const detailResult = await pool.query(
+      `SELECT r.id, c.year, cl.name AS club_name
+       FROM registrations r
+       JOIN categories c ON r.category_id = c.id
+       JOIN clubs cl ON r.club_id = cl.id
+       WHERE r.id = $1 AND r.club_id = $2`,
+      [id, club_id],
+    );
+
     const result = await pool.query(
       `DELETE FROM registrations
        WHERE id = $1 AND club_id = $2
@@ -64,7 +76,17 @@ export const deleteRegistration = async (req, res) => {
       });
     }
 
-    res.json({ message: "Inscripción eliminada" });
+    if (detailResult.rows.length > 0) {
+      const registration = detailResult.rows[0];
+      await sendAdminCategoryDeletedEmail({
+        adminEmail: process.env.ADMIN_EMAIL,
+        clubName: registration.club_name,
+        categoryYear: registration.year,
+        deletedByAdmin: false,
+      });
+    }
+
+    res.json({ message: "Inscripcion eliminada" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al eliminar" });
@@ -92,6 +114,15 @@ export const deleteAnyRegistration = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const detailResult = await pool.query(
+      `SELECT r.id, c.year, cl.name AS club_name
+       FROM registrations r
+       JOIN categories c ON r.category_id = c.id
+       JOIN clubs cl ON r.club_id = cl.id
+       WHERE r.id = $1`,
+      [id],
+    );
+
     const result = await pool.query(
       `DELETE FROM registrations
        WHERE id = $1
@@ -105,7 +136,17 @@ export const deleteAnyRegistration = async (req, res) => {
       });
     }
 
-    res.json({ message: "Inscripción eliminada por admin" });
+    if (detailResult.rows.length > 0) {
+      const registration = detailResult.rows[0];
+      await sendAdminCategoryDeletedEmail({
+        adminEmail: process.env.ADMIN_EMAIL,
+        clubName: registration.club_name,
+        categoryYear: registration.year,
+        deletedByAdmin: true,
+      });
+    }
+
+    res.json({ message: "Inscripcion eliminada por admin" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al eliminar" });

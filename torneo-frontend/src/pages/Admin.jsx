@@ -11,6 +11,7 @@ import confirmDelete from "../utils/confirm.jsx";
 import Swal from "sweetalert2";
 import Spinner from "../components/Spinner";
 import { toast } from "react-toastify";
+import Footer from "../components/Footer.jsx";
 
 const dateFormatter = new Intl.DateTimeFormat("es-AR");
 
@@ -291,8 +292,11 @@ function Admin() {
           </div>
         </div>
       )}
+      <Footer />
     </div>
   );
 }
 
 export default Admin;
+
+

@@ -2,6 +2,7 @@ import "dotenv/config";
 import pool from "../db/connection.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendClubRegisteredEmail } from "../services/email.service.js";
 
 export const loginClub = async (req, res) => {
   try {
@@ -75,6 +76,11 @@ export const register = async (req, res) => {
     res.json({
       message: "Club registrado correctamente",
       club: result.rows[0],
+    });
+
+    await sendClubRegisteredEmail({
+      clubName: result.rows[0].name,
+      to: result.rows[0].email,
     });
   } catch (error) {
     console.error(error);
