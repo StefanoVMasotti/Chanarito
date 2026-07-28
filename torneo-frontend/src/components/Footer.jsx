@@ -1,28 +1,32 @@
 function Footer() {
   const links = {
-    clubInstagram: "#",
-    clubFacebook: "#",
-    clubWhatsapp: "#",
-    svmLinkedin: "#",
-    svmInstagram: "#",
-    svmGithub: "#",
+    clubInstagram:
+      "https://www.instagram.com/csdmchoficial?igsh=bWFudzdmOW9oYWp6",
+    clubFacebook: "https://www.facebook.com/chanarense.web/",
+    clubWhatsapp: "https://wa.me/03468514705",
+    svmLinkedin: "https://www.linkedin.com/in/stefano-v-masotti-044a70363/",
+    svmInstagram:
+      "https://www.instagram.com/csdmchoficial?igsh=bWFudzdmOW9oYWp6",
+    svmGithub: "https://github.com/StefanoVMasotti",
   };
 
   return (
     <footer className="mx-2 md:mx-3 mb-3 mt-6 glass-panel rounded-2xl p-5 text-white">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <h3 className="text-lg font-bold mb-2">Club Chanarense</h3>
+          <h3 className="text-lg font-bold mb-2">Club Chañarense</h3>
           <p className="text-sm text-blue-100/90 mb-3">
-            Torneo Chanarito - Futbol infantil y comunidad.
+            Chañarito - Futbol infantil y comunidad.
           </p>
           <p className="text-sm text-blue-100/90 mb-3">
-            Ubicacion: Chanar Ladeado, Santa Fe, Argentina
+            Ubicación: Chañar Ladeado, Santa Fe, Argentina
           </p>
           <div className="flex gap-2 flex-wrap">
             <a
               href={links.clubInstagram}
               className="secondary-btn px-3 py-1 rounded-lg text-sm flex items-center gap-1"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <svg
                 viewBox="0 0 24 24"
