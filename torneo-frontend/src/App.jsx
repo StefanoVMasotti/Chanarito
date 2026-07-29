@@ -7,6 +7,7 @@ import Admin from "./pages/Admin";
 import Register from "./pages/Register.jsx";
 import Landing from "./pages/Landing.jsx";
 import Information from "./pages/Information.jsx";
+import CategoryGallery from "./pages/CategoryGallery.jsx";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/information" element={<Information />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/categories/:year" element={<CategoryGallery />} />
         <Route
           path="/dashboard"
           element={
