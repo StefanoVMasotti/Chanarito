@@ -8,12 +8,12 @@ import img5 from "../assets/2016(1).jpg";
 import img6 from "../assets/2015(1).jfif";
 
 const gallery = [
-  { src: img1, label: "Categoria 2020" },
-  { src: img2, label: "Categoria 2019" },
-  { src: img3, label: "Categoria 2018" },
-  { src: img4, label: "Categoria 2017" },
-  { src: img5, label: "Categoria 2016" },
-  { src: img6, label: "Categoria 2015" },
+  { src: img1, year: 2020, label: "Categoria 2020" },
+  { src: img2, year: 2019, label: "Categoria 2019" },
+  { src: img3, year: 2018, label: "Categoria 2018" },
+  { src: img4, year: 2017, label: "Categoria 2017" },
+  { src: img5, year: 2016, label: "Categoria 2016" },
+  { src: img6, year: 2015, label: "Categoria 2015" },
 ];
 
 function Landing() {
@@ -56,7 +56,11 @@ function Landing() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {gallery.map((item) => (
-              <div key={item.label} className="relative group overflow-hidden rounded-2xl">
+              <div
+                key={item.label}
+                onClick={() => navigate(`/categories/${item.year}`)}
+                className="relative group overflow-hidden rounded-2xl cursor-pointer"
+              >
                 <img
                   src={item.src}
                   alt={item.label}
